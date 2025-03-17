@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "2.0.20"
     application
     id("org.openjfx.javafxplugin") version "0.0.14"
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -23,7 +23,7 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 application {
