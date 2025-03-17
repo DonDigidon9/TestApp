@@ -19,6 +19,13 @@ dependencies {
     implementation("org.openjfx:javafx-fxml:20")
     implementation("org.openjfx:javafx-graphics:20")
     implementation("org.openjfx:javafx-base:20")
+
+    val exposedVersion = "0.41.1"
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("com.h2database:h2:2.1.214")
+
     testImplementation(kotlin("test"))
 }
 

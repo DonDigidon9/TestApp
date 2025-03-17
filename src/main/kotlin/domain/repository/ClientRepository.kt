@@ -3,11 +3,11 @@ package domain.repository
 import domain.entity.ClientEntity
 
 interface ClientRepository {
-    fun getAllClients(): List<ClientEntity>
+    fun getAllClients(callback: (List<ClientEntity>) -> Unit)
 
-    fun createClient(client: ClientEntity): Boolean
+    fun createClient(client: ClientEntity, callback: (List<ClientEntity>) -> Unit): Boolean
 
-    fun updateClient(client: ClientEntity): Boolean
+    fun updateClient(client: ClientEntity, callback: (List<ClientEntity>) -> Unit): Boolean
 
-    fun deleteClient(client: ClientEntity): Boolean
+    fun deleteClient(client: ClientEntity, callback: (List<ClientEntity>) -> Unit): Boolean
 }
