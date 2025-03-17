@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="presentation.controllers.Controller_clients" spacing="20">
+
+    <TableView fx:id="tableView">
+        <columns>
+            <TableColumn text="ID" fx:id="idColumn" />
+            <TableColumn text="Имя" fx:id="nameColumn"/>
+            <TableColumn text="Возраст" fx:id="ageColumn"/>
+            <TableColumn text="Дата" fx:id="dateColumn" />
+        </columns>
+    </TableView>
+
+    <Button text="Добавить" onAction="#onAddClick"/>
+    <Button text="Назад" onAction="#goBack"/>
+</VBox>

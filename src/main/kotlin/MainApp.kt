@@ -5,10 +5,10 @@ import javafx.stage.Stage
 
 class MainApp : Application() {
     override fun start(primaryStage: Stage) {
-        val fxmlLoader = FXMLLoader(javaClass.getResource("UI_start.fxml")) // Загружаем первый экран
-        val scene = Scene(fxmlLoader.load()) // Создаём сцену из загруженного FXML
+        val fxmlLoader = FXMLLoader(javaClass.getResource("UI_start.fxml"))
+        val scene = Scene(fxmlLoader.load())
         primaryStage.scene = scene
-        primaryStage.title = "Первый экран" // Заголовок окна
+        primaryStage.title = "Start screen" // Заголовок окна
         primaryStage.show()
     }
 }
