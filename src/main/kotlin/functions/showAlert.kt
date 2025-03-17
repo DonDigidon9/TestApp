@@ -1,4 +1,4 @@
-package data.Functions
+package functions
 
 import javafx.scene.control.Alert
 

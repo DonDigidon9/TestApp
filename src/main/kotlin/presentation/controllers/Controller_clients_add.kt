@@ -1,14 +1,12 @@
 package presentation.controllers
 
 import RepositoryDI
-import data.Functions.showAlert
+import functions.showAlert
 import domain.entity.ClientEntity
-import domain.repository.ClientRepository
 import javafx.fxml.FXML
 import javafx.scene.control.DatePicker
 import javafx.scene.control.TextField
 import javafx.stage.Stage
-import presentation.Classes.ClientSiu
 
 class Controller_clients_add {
     @FXML private lateinit var nameField: TextField

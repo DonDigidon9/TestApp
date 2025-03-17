@@ -4,6 +4,7 @@ import RepositoryDI
 import data.repository.ClientRepositoryImpl
 import domain.entity.ClientEntity
 import domain.repository.ClientRepository
+import functions.showEditDialogClient
 import presentation.Classes.ClientSiu
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -51,6 +52,16 @@ class Controller_clients {
 
         tableView.items = data
         clientRepository.getAllClients(callback = update)
+
+        tableView.setOnMouseClicked { event ->
+            if (event.clickCount == 2) {
+                val selectedClient = tableView.selectionModel.selectedItem
+                if (selectedClient != null) {
+                    showEditDialogClient(selectedClient, update)
+                    return@setOnMouseClicked
+                }
+            }
+        }
     }
 
     @FXML

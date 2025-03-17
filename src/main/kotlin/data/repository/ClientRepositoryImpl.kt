@@ -53,24 +53,30 @@ class ClientRepositoryImpl: ClientRepository {
 
     override fun updateClient(client: ClientEntity, callback: (List<ClientEntity>) -> Unit): Boolean {
         try {
-            ClientModel.update({ ClientModel.id eq client.id }) {
-                it[name] = client.name
-                it[age] = client.age
-                it[date] = client.date.toString()
+            transaction {
+                ClientModel.update({ ClientModel.id eq client.id }) {
+                    it[name] = client.name
+                    it[age] = client.age
+                    it[date] = client.date.toString()
+                }
             }
             getAllClients(callback)
             return true
         } catch (e: Exception) {
+            println(e.message)
             return false
         }
     }
 
     override fun deleteClient(client: ClientEntity, callback: (List<ClientEntity>) -> Unit): Boolean {
         try {
-            ClientModel.deleteWhere { ClientModel.id eq client.id }
+            transaction {
+                ClientModel.deleteWhere { ClientModel.id eq client.id }
+            }
             getAllClients(callback)
             return true
         } catch (e: Exception) {
+            println(e.message)
             return false
         }
     }
