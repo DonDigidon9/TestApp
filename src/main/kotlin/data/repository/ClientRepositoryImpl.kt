@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
-class ClientRepositoryImpl: ClientRepository {
+class ClientRepositoryImpl : ClientRepository {
     init {
         transaction {
             SchemaUtils.create(ClientModel)
@@ -31,6 +31,18 @@ class ClientRepositoryImpl: ClientRepository {
         } catch (e: Exception) {
             callback(emptyList())
         }
+    }
+
+    override fun getClientById(id: Long): ClientEntity? = transaction {
+        val client = ClientModel.select { ClientModel.id eq id }.firstOrNull()?.let {
+            ClientEntity(
+                id = it[ClientModel.id].value,
+                name = it[ClientModel.name],
+                age = it[ClientModel.age],
+                date = LocalDate.parse(it[ClientModel.date])
+            )
+        }
+        return@transaction client
     }
 
     override fun createClient(client: ClientEntity, callback: (List<ClientEntity>) -> Unit): Boolean {
@@ -61,7 +73,6 @@ class ClientRepositoryImpl: ClientRepository {
             getAllClients(callback)
             return true
         } catch (e: Exception) {
-            println(e.message)
             return false
         }
     }
@@ -74,7 +85,6 @@ class ClientRepositoryImpl: ClientRepository {
             getAllClients(callback)
             return true
         } catch (e: Exception) {
-            println(e.message)
             return false
         }
     }

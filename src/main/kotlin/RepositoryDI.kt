@@ -1,3 +1,4 @@
+import com.google.gson.Gson
 import data.database.DataBaseFactory
 import data.repository.ClientRepositoryImpl
 import data.repository.OrderRepositoryImpl
@@ -12,7 +13,8 @@ object RepositoryDI {
     }
     val clientRepository: ClientRepository = ClientRepositoryImpl()
 
-    val providerRepository: ProviderRepository = ProviderRepositoryImpl()
-
-    val orderRepository: OrderRepository = OrderRepositoryImpl()
+    val orderRepository: OrderRepository = OrderRepositoryImpl(
+        clientRepository = clientRepository,
+        gson = Gson()
+    )
 }
