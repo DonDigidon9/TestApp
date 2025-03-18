@@ -26,6 +26,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("com.h2database:h2:2.1.214")
 
+    implementation("com.google.code.gson:gson:2.10.1")
+
     testImplementation(kotlin("test"))
 }
 

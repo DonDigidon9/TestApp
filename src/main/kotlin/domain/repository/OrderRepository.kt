@@ -3,11 +3,7 @@ package domain.repository
 import domain.entity.OrderEntity
 
 interface OrderRepository {
-    fun getAllOrders(): List<OrderEntity>
+    fun getAllOrders(callback: (List<OrderEntity>) -> Unit)
 
-    fun createOrder(order: OrderEntity): Boolean
-
-    fun updateOrder(order: OrderEntity): Boolean
-
-    fun deleteOrder(order: OrderEntity): Boolean
+    fun createOrder(order: OrderEntity, callback: (List<OrderEntity>) -> Unit): Boolean
 }
