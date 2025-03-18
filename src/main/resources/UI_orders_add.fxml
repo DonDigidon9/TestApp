@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="presentation.controllers.Controller_orders_add"
+      prefHeight="400.0" prefWidth="600.0" spacing="20" padding="10">
+
+    <!-- Поле для выбора одного клиента -->
+    <Label text="Выберите клиента:" />
+    <ComboBox fx:id="clientComboBox" promptText="Выберите клиента" />
+
+    <!-- Поле для выбора нескольких клиентов -->
+    <Label text="Выберите клиентов:" />
+    <ListView fx:id="clientListView" prefHeight="150.0" />
+    <Button text="Удалить выбранных" onAction="#onRemoveSelectedClients" />
+
+    <!-- Кнопка сохранения -->
+    <Button text="Сохранить" onAction="#onAddClick" />
+</VBox>

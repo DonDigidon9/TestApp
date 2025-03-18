@@ -21,7 +21,7 @@ class Controller_start {
 
     @FXML
     fun ordersScreen(event: ActionEvent) {
-        val fxmlLoader = FXMLLoader(javaClass.getResource("UI_oorders.fxml")) // Загружаем второй экран
+        val fxmlLoader = FXMLLoader(javaClass.getResource("/UI_orders.fxml")) // Загружаем второй экран
         val root: Parent = fxmlLoader.load()
 
         val stage = (event.source as Node).scene.window as Stage // Получаем текущее окно
