@@ -27,7 +27,7 @@ class OrderRepositoryImpl(
                 val result = OrderModel.selectAll().map {
                     OrderEntity(
                         id = it[OrderModel.id].value,
-                        client = clientRepository.getClientById(it[OrderModel.id].value)!!,
+                        client = clientRepository.getClientById(it[OrderModel.client].value)!!,
                         clientList = gson.fromJson<List<Long>>(
                             it[OrderModel.clientIdList],
                             object : TypeToken<List<Long>>() {}.type

@@ -34,7 +34,6 @@ class Controller_orders {
     private val orderRepository = RepositoryDI.orderRepository
 
     private val update = fun(list: List<OrderEntity>) {
-        println(list)
         data.clear()
         list.forEach {
             data.add(
