@@ -49,14 +49,12 @@ class Controller_client_redact {
             }
 
             if (callback != null) {
-                println("Updating client...")
                 val res = clientRepository.updateClient(ClientEntity(
                     id = client.getId(),
                     name = newName,
                     age = newAge,
                     date = newDate
                 ), callback!!)
-                println(res)
             } else {
                 println("Callback is null! Check if it was set.")
             }
@@ -65,7 +63,6 @@ class Controller_client_redact {
 
         deleteButton.setOnAction {
             if (callback != null) {
-                println("Deleting client...")
                 clientRepository.deleteClient(ClientEntity(
                     id = client.getId(),
                     name = client.getName(),

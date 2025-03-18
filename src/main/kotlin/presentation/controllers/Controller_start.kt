@@ -20,13 +20,12 @@ class Controller_start {
     }
 
     @FXML
-    fun providerScreen(event: ActionEvent) {
-//        val fxmlLoader = FXMLLoader(javaClass.getResource("UI_2.fxml")) // Загружаем второй экран
-//        val root: Parent = fxmlLoader.load()
-//
-//        val stage = (event.source as Node).scene.window as Stage // Получаем текущее окно
-//        stage.scene = Scene(root) // Устанавливаем новый экран
-//        stage.title = "Второй экран" // Меняем заголовок
-        println("Hello world")
+    fun ordersScreen(event: ActionEvent) {
+        val fxmlLoader = FXMLLoader(javaClass.getResource("UI_oorders.fxml")) // Загружаем второй экран
+        val root: Parent = fxmlLoader.load()
+
+        val stage = (event.source as Node).scene.window as Stage // Получаем текущее окно
+        stage.scene = Scene(root) // Устанавливаем новый экран
+        stage.title = "Второй экран" // Меняем заголовок
     }
 }

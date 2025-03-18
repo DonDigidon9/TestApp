@@ -12,6 +12,6 @@
 
     <Label text="SIUU" />
     <Button text="Клиенты" onAction="#clientsScreen" />
-    <Button text="Поставщики" onAction="#providerScreen" />
+    <Button text="Заказы" onAction="#ordersScreen" />
 
 </VBox>
