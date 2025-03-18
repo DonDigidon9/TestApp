@@ -1,6 +1,5 @@
 package data.repository
 
-import data.database.DataBaseFactory
 import data.database.model.ClientModel
 import domain.entity.ClientEntity
 import domain.repository.ClientRepository
@@ -11,7 +10,6 @@ import java.time.LocalDate
 
 class ClientRepositoryImpl: ClientRepository {
     init {
-        DataBaseFactory.init()
         transaction {
             SchemaUtils.create(ClientModel)
         }
