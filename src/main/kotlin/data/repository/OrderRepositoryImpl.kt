@@ -39,6 +39,7 @@ class OrderRepositoryImpl(
                 callback(result)
             }
         } catch (e: Exception) {
+            println(e.message)
             callback(emptyList())
         }
     }

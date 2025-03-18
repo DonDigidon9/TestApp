@@ -34,6 +34,7 @@ class ClientRepositoryImpl : ClientRepository {
     }
 
     override fun getClientById(id: Long): ClientEntity? = transaction {
+        println(id)
         val client = ClientModel.select { ClientModel.id eq id }.firstOrNull()?.let {
             ClientEntity(
                 id = it[ClientModel.id].value,
@@ -42,6 +43,7 @@ class ClientRepositoryImpl : ClientRepository {
                 date = LocalDate.parse(it[ClientModel.date])
             )
         }
+        println(client)
         return@transaction client
     }
 

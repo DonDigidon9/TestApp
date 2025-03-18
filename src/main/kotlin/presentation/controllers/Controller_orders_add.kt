@@ -22,18 +22,23 @@ class Controller_orders_add {
 
     private val clientRepository = RepositoryDI.clientRepository
     private var callback_client: ((List<OrderEntity>) -> Unit)? = null
-    lateinit var allClients : ObservableList<ClientSiu>
+
+    lateinit var allClients: ObservableList<ClientSiu>
+
+    init {
+        allClients = FXCollections.observableArrayList()
+    }
 
     private val update = fun(list: List<ClientEntity>) {
         allClients.clear()
         list.forEach {
             allClients.add(
                 ClientSiu(
-                id = it.id,
-                name = it.name,
-                age = it.age,
-                date = it.date
-            )
+                    id = it.id,
+                    name = it.name,
+                    age = it.age,
+                    date = it.date
+                )
             )
         }
     }
@@ -49,6 +54,10 @@ class Controller_orders_add {
 
     @FXML
     fun initialize() {
+        if (!::allClients.isInitialized) {
+            allClients = FXCollections.observableArrayList()
+        }
+
         clientRepository.getAllClients(callback = update)
 
         val clientEntities = allClients.map { clientSiu ->
@@ -129,7 +138,15 @@ class Controller_orders_add {
             callback_order!!
         )
 
+
+
         // Закрываем окно
         stage.close()
+    }
+
+    @FXML
+    fun onRemoveSelectedClients() {
+        val selectedClients = clientListView.selectionModel.selectedItems
+        clientListView.items.removeAll(selectedClients)
     }
 }

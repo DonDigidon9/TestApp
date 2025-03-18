@@ -28,11 +28,13 @@ class Controller_orders {
     @FXML private lateinit var clientColumn: TableColumn<OrderSiu, String>
     @FXML private lateinit var clientListColumn: TableColumn<OrderSiu, String>
 
+
     private val data: ObservableList<OrderSiu> = FXCollections.observableArrayList()
 
-    private val clientRepository = RepositoryDI.clientRepository
+    private val orderRepository = RepositoryDI.orderRepository
 
     private val update = fun(list: List<OrderEntity>) {
+        println(list)
         data.clear()
         list.forEach {
             data.add(
@@ -54,6 +56,7 @@ class Controller_orders {
             SimpleStringProperty(clientNames)
         }
 
+        // Загружаем данные
         tableView.items = data
         orderRepository.getAllOrders(callback = update)
 
@@ -70,15 +73,16 @@ class Controller_orders {
 
     @FXML
     fun onAddClick() {
-        val loader = FXMLLoader(javaClass.getResource("/UI_orders_add.fxml")) // Загружаем второй экран
+        val loader = FXMLLoader(javaClass.getResource("/UI_orders_add.fxml"))
         val root: Parent = loader.load()
         val controller: Controller_orders_add? = loader.getController()
 
         val stage = Stage()
         stage.initModality(Modality.APPLICATION_MODAL)
-        stage.title = "Окно редатирования"
+        stage.title = "Окно редактирования"
         stage.scene = Scene(root)
 
+        // Передаем callback для обновления данных
         controller?.setCallback(update)
         controller?.setParentController(this, stage)
         stage.showAndWait()
