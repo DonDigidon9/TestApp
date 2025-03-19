@@ -11,7 +11,8 @@ import javafx.stage.Stage
 import presentation.Classes.ClientSiu
 
 class Controller_orders_add {
-    @FXML private lateinit var clientComboBox: ComboBox<ClientEntity>
+    @FXML private lateinit var clientComboBoxForTable: ComboBox<ClientEntity> // Для таблицы
+    @FXML private lateinit var clientComboBoxForOrder: ComboBox<ClientEntity> // Для поля client в OrderEntity
     @FXML private lateinit var clientListView: ListView<ClientEntity>
 
     private var parentController: Controller_orders? = null
@@ -58,6 +59,7 @@ class Controller_orders_add {
             allClients = FXCollections.observableArrayList()
         }
 
+        // Загружаем клиентов из репозитория
         clientRepository.getAllClients(callback = update)
 
         val clientEntities = allClients.map { clientSiu ->
@@ -69,12 +71,16 @@ class Controller_orders_add {
             )
         }
 
-        clientComboBox.items = FXCollections.observableArrayList(clientEntities)
-        clientListView.items = FXCollections.observableArrayList(clientEntities)
+        // Заполняем оба ComboBox
+        clientComboBoxForTable.items = FXCollections.observableArrayList(clientEntities)
+        clientComboBoxForOrder.items = FXCollections.observableArrayList(clientEntities)
 
+        // Инициализация ListView
+        clientListView.items = FXCollections.observableArrayList()
         clientListView.selectionModel.selectionMode = SelectionMode.MULTIPLE
 
-        clientComboBox.setCellFactory {
+        // Настройка отображения для ComboBox
+        clientComboBoxForTable.setCellFactory {
             object : ListCell<ClientEntity>() {
                 override fun updateItem(item: ClientEntity?, empty: Boolean) {
                     super.updateItem(item, empty)
@@ -87,7 +93,7 @@ class Controller_orders_add {
             }
         }
 
-        clientComboBox.setButtonCell(
+        clientComboBoxForTable.setButtonCell(
             object : ListCell<ClientEntity>() {
                 override fun updateItem(item: ClientEntity?, empty: Boolean) {
                     super.updateItem(item, empty)
@@ -100,6 +106,33 @@ class Controller_orders_add {
             }
         )
 
+        clientComboBoxForOrder.setCellFactory {
+            object : ListCell<ClientEntity>() {
+                override fun updateItem(item: ClientEntity?, empty: Boolean) {
+                    super.updateItem(item, empty)
+                    if (item == null || empty) {
+                        text = null
+                    } else {
+                        text = "${item.id}: ${item.name}" // Показываем ID и имя
+                    }
+                }
+            }
+        }
+
+        clientComboBoxForOrder.setButtonCell(
+            object : ListCell<ClientEntity>() {
+                override fun updateItem(item: ClientEntity?, empty: Boolean) {
+                    super.updateItem(item, empty)
+                    if (item == null || empty) {
+                        text = null
+                    } else {
+                        text = "${item.id}: ${item.name}" // Показываем ID и имя
+                    }
+                }
+            }
+        )
+
+        // Настройка отображения для ListView
         clientListView.setCellFactory {
             object : ListCell<ClientEntity>() {
                 override fun updateItem(item: ClientEntity?, empty: Boolean) {
@@ -115,38 +148,44 @@ class Controller_orders_add {
     }
 
     @FXML
-    fun onAddClick() {
-        val selectedClient = clientComboBox.selectionModel.selectedItem
+    fun onAddClientToTable() {
+        val selectedClient = clientComboBoxForTable.selectionModel.selectedItem
         if (selectedClient == null) {
-            showAlert("Ошибка", "Выберите клиента!")
+            showAlert("Ошибка", "Выберите клиента для добавления в таблицу!")
             return
         }
 
-        // Получаем выбранных клиентов из ListView
-        val selectedClients = clientListView.selectionModel.selectedItems
-        if (selectedClients.isEmpty()) {
-            showAlert("Ошибка", "Выберите хотя бы одного клиента из списка!")
+        if (!clientListView.items.contains(selectedClient)) {
+            clientListView.items.add(selectedClient)
+        } else {
+            showAlert("Ошибка", "Этот клиент уже добавлен в таблицу!")
+        }
+    }
+
+    @FXML
+    fun onAddClick() {
+        val selectedClientForOrder = clientComboBoxForOrder.selectionModel.selectedItem
+        if (selectedClientForOrder == null) {
+            showAlert("Ошибка", "Выберите клиента для заказа!")
+            return
+        }
+
+        val selectedClientsForTable = clientListView.items
+        if (selectedClientsForTable.isEmpty()) {
+            showAlert("Ошибка", "Добавьте хотя бы одного клиента в таблицу!")
             return
         }
 
         // Создаем заказ
         orderRepository.createOrder(
             OrderEntity(
-                client = selectedClient,
-                clientList = selectedClients.toList()
+                client = selectedClientForOrder, // Клиент для поля client
+                clientList = selectedClientsForTable.toList() // Клиенты для таблицы
             ),
             callback_order!!
         )
 
-
-
         // Закрываем окно
         stage.close()
-    }
-
-    @FXML
-    fun onRemoveSelectedClients() {
-        val selectedClients = clientListView.selectionModel.selectedItems
-        clientListView.items.removeAll(selectedClients)
     }
 }
