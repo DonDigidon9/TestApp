@@ -6,9 +6,8 @@ import data.database.model.OrderModel
 import domain.entity.OrderEntity
 import domain.repository.ClientRepository
 import domain.repository.OrderRepository
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class OrderRepositoryImpl(
@@ -51,6 +50,33 @@ class OrderRepositoryImpl(
                     insertStatement[client] = order.client.id
                     insertStatement[clientIdList] = gson.toJson(order.clientList.map { it.id })
                 }
+            }
+            getAllOrders(callback)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    override fun updateOrder(order: OrderEntity, callback: (List<OrderEntity>) -> Unit): Boolean {
+        try {
+            transaction {
+                OrderModel.update({ OrderModel.id eq order.id }) { updateStatement ->
+                    updateStatement[client] = order.client.id
+                    updateStatement[clientIdList] = gson.toJson(order.clientList.map { it.id })
+                }
+            }
+            getAllOrders(callback)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    override fun deleteOrder(order: OrderEntity, callback: (List<OrderEntity>) -> Unit): Boolean {
+        try {
+            transaction {
+                OrderModel.deleteWhere { OrderModel.id eq order.id }
             }
             getAllOrders(callback)
             return true
