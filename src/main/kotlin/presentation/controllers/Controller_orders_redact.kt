@@ -1,5 +1,6 @@
 package presentation.controllers
 
+import RepositoryDI.clientRepository
 import domain.entity.ClientEntity
 import domain.entity.OrderEntity
 import functions.showAlert
@@ -9,17 +10,31 @@ import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.stage.Stage
 import presentation.Classes.ClientSiu
+import presentation.Classes.OrderSiu
 
-class Controller_orders_add {
+class Controller_orders_redact {
     @FXML private lateinit var clientComboBoxForTable: ComboBox<ClientEntity> // Для таблицы
     @FXML private lateinit var clientComboBoxForOrder: ComboBox<ClientEntity> // Для поля client в OrderEntity
     @FXML private lateinit var clientListView: ListView<ClientEntity>
+    @FXML private lateinit var saveButton: Button
+    @FXML private lateinit var cancelButton: Button
+    @FXML private lateinit var deleteButton: Button
 
-    private var parentController: Controller_orders? = null
+    private lateinit var order: OrderSiu
     private lateinit var stage: Stage
 
     private val orderRepository = RepositoryDI.orderRepository
-    private var callback_order: ((List<OrderEntity>) -> Unit)? = null
+    private var callback: ((List<OrderEntity>) -> Unit)? = null
+
+    fun setCallback(callback: (List<OrderEntity>) -> Unit) {
+        this.callback = callback
+    }
+
+    fun setOrder(order: OrderSiu, stage: Stage) {
+        this.order = order
+        this.stage = stage
+        initializeFields()
+    }
 
     private val clientRepository = RepositoryDI.clientRepository
     private var callback_client: ((List<OrderEntity>) -> Unit)? = null
@@ -27,7 +42,6 @@ class Controller_orders_add {
     init {
         allClients = FXCollections.observableArrayList()
     }
-
     private val update = fun(list: List<ClientEntity>) {
         allClients.clear()
         list.forEach {
@@ -42,13 +56,10 @@ class Controller_orders_add {
         }
     }
 
-    fun setParentController(controller: Controller_orders?, stage: Stage) {
-        this.parentController = controller
-        this.stage = stage
-    }
-
-    fun setCallback(callback: (List<OrderEntity>) -> Unit) {
-        this.callback_order = callback
+    private fun initializeFields() {
+        // Устанавливаем текущие значения заказа в поля
+        clientComboBoxForOrder.value = order.getClient()
+        clientListView.items = FXCollections.observableArrayList(order.getClientList())
     }
 
     @FXML
@@ -91,19 +102,6 @@ class Controller_orders_add {
             }
         }
 
-        clientComboBoxForTable.setButtonCell(
-            object : ListCell<ClientEntity>() {
-                override fun updateItem(item: ClientEntity?, empty: Boolean) {
-                    super.updateItem(item, empty)
-                    if (item == null || empty) {
-                        text = null
-                    } else {
-                        text = "${item.id}: ${item.name}" // Показываем ID и имя
-                    }
-                }
-            }
-        )
-
         clientComboBoxForOrder.setCellFactory {
             object : ListCell<ClientEntity>() {
                 override fun updateItem(item: ClientEntity?, empty: Boolean) {
@@ -117,19 +115,6 @@ class Controller_orders_add {
             }
         }
 
-        clientComboBoxForOrder.setButtonCell(
-            object : ListCell<ClientEntity>() {
-                override fun updateItem(item: ClientEntity?, empty: Boolean) {
-                    super.updateItem(item, empty)
-                    if (item == null || empty) {
-                        text = null
-                    } else {
-                        text = "${item.id}: ${item.name}" // Показываем ID и имя
-                    }
-                }
-            }
-        )
-
         // Настройка отображения для ListView
         clientListView.setCellFactory {
             object : ListCell<ClientEntity>() {
@@ -142,6 +127,51 @@ class Controller_orders_add {
                     }
                 }
             }
+        }
+
+        saveButton.setOnAction {
+            val newClient = clientComboBoxForOrder.value
+            val newClientList = clientListView.items
+
+            if (newClient == null) {
+                showAlert("Ошибка", "Выберите клиента для заказа!")
+                return@setOnAction
+            }
+
+            if (newClientList.isEmpty()) {
+                showAlert("Ошибка", "Добавьте хотя бы одного клиента в таблицу!")
+                return@setOnAction
+            }
+
+            if (callback != null) {
+                orderRepository.updateOrder(
+                    OrderEntity(
+                        id = order.getId(),
+                        client = newClient,
+                        clientList = newClientList.toList()
+                    ), callback!!)
+            } else {
+                println("Callback is null! Check if it was set.")
+            }
+            stage.close()
+        }
+
+        deleteButton.setOnAction {
+            if (callback != null) {
+                orderRepository.deleteOrder(
+                    OrderEntity(
+                        id = order.getId(),
+                        client = order.getClient(),
+                        clientList = order.getClientList()
+                    ), callback!!)
+            } else {
+                println("Callback is null! Check if it was set.")
+            }
+            stage.close()
+        }
+
+        cancelButton.setOnAction {
+            stage.close()
         }
     }
 
@@ -158,33 +188,6 @@ class Controller_orders_add {
         } else {
             showAlert("Ошибка", "Этот клиент уже добавлен в таблицу!")
         }
-    }
-
-    @FXML
-    fun onAddClick() {
-        val selectedClientForOrder = clientComboBoxForOrder.selectionModel.selectedItem
-        if (selectedClientForOrder == null) {
-            showAlert("Ошибка", "Выберите клиента для заказа!")
-            return
-        }
-
-        val selectedClientsForTable = clientListView.items
-        if (selectedClientsForTable.isEmpty()) {
-            showAlert("Ошибка", "Добавьте хотя бы одного клиента в таблицу!")
-            return
-        }
-
-        // Создаем заказ
-        orderRepository.createOrder(
-            OrderEntity(
-                client = selectedClientForOrder, // Клиент для поля client
-                clientList = selectedClientsForTable.toList() // Клиенты для таблицы
-            ),
-            callback_order!!
-        )
-
-        // Закрываем окно
-        stage.close()
     }
 
     @FXML

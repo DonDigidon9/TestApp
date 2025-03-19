@@ -5,25 +5,27 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="presentation.controllers.Controller_orders_add"
+      fx:controller="presentation.controllers.Controller_orders_redact"
       prefHeight="400.0" prefWidth="600.0" spacing="20">
+
+    <!-- Поле для выбора клиента для таблицы -->
+    <Label text="Выберите клиента для таблицы:" />
+    <ComboBox fx:id="clientComboBoxForTable" promptText="Выберите клиента" />
+    <Button text="Добавить клиента в таблицу" onAction="#onAddClientToTable" />
 
     <!-- Поле для выбора клиента для поля client в OrderEntity -->
     <Label text="Выберите клиента для заказа:" />
     <ComboBox fx:id="clientComboBoxForOrder" promptText="Выберите клиента" />
-
-    <!-- Поле для выбора клиента для таблицы -->
-    <HBox spacing="10">
-        <Label text="Выберите клиента для таблицы:" />
-        <ComboBox fx:id="clientComboBoxForTable" promptText="Выберите клиента" />
-        <Button text="Добавить клиента в таблицу" onAction="#onAddClientToTable" />
-    </HBox>
 
     <!-- Таблица для отображения клиентов -->
     <Label text="Список клиентов:" />
     <ListView fx:id="clientListView" prefHeight="150.0" />
     <Button text="Удалить выбранных" onAction="#onRemoveSelectedClients" />
 
-    <!-- Кнопка сохранения -->
-    <Button text="Сохранить" onAction="#onAddClick" />
+    <!-- Кнопки управления -->
+    <HBox spacing="10">
+        <Button fx:id="saveButton" text="Сохранить" />
+        <Button fx:id="cancelButton" text="Отмена" />
+        <Button fx:id="deleteButton" text="Удалить" />
+    </HBox>
 </VBox>
